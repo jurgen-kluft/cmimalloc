@@ -11,16 +11,16 @@ func GetPackage() *denv.Package {
 	cunittestpkg := cunittest.GetPackage()
 
 	// The main (cmimalloc) package
-	mainpkg := denv.NewPackage("cmimalloc")
+	mainpkg := denv.NewPackage("github.com\\jurgen-kluft", "cmimalloc")
 	mainpkg.AddPackage(cunittestpkg)
 
 	// 'cmimalloc' library
 	mainlib := denv.SetupCppLibProjectWithLibs("cmimalloc", "github.com\\jurgen-kluft\\cmimalloc", getPlatformLibs())
 
 	// 'cmimalloc' unittest project
-	maintest := denv.SetupDefaultCppTestProject("cmimalloc"+"_test", "github.com\\jurgen-kluft\\cmimalloc")
+	maintest := denv.SetupCppTestProject(mainpkg, "cmimalloc"+"_test")
 	maintest.AddDependencies(cunittestpkg.GetMainLib()...)
-	maintest.Dependencies = append(maintest.Dependencies, mainlib)
+	maintest.AddDependency(mainlib)
 
 	mainpkg.AddMainLib(mainlib)
 	mainpkg.AddUnittest(maintest)
